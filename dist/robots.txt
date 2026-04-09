@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://demo-wonderwoman-construction.dream-surge.com/sitemap-index.xml

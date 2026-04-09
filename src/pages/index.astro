@@ -1,0 +1,1584 @@
+---
+/**
+ * Recipe: Mountain Bold
+ * Category: Roofing
+ * Reference: Brady Roofing (bradyroofing.com) style
+ *
+ * A complete self-contained homepage recipe.
+ * Navy + gold palette, Space Grotesk headings, bold CTAs, trust-focused layout.
+ * NO external component imports — everything inline.
+ */
+import BaseLayout from "../layouts/BaseLayout.astro";
+import StickyMinimal from "../../components/nav/StickyMinimal.astro";
+import MultiColumn from "../../components/footer/MultiColumn.astro";
+import { siteConfig } from "../lib/site-config";
+import { getSeoForPage } from "../lib/seo";
+
+const seo = getSeoForPage("homepage");
+const biz = siteConfig.business;
+const content = siteConfig.content;
+const homepage = content.homepage;
+const services = content.services;
+const serviceAreas = content.serviceAreas;
+const reviews = content.reviews;
+const info = content.companyInfo;
+const images = siteConfig.images;
+const heroR = (images as any).heroResponsive;
+const servicesR = (images as any).servicesResponsive || {};
+
+const displayServices = services.slice(0, 6);
+const displayAreas = serviceAreas.slice(0, 8);
+const displayReviews = reviews.slice(0, 6);
+const galleryImages = images.gallery?.length ? images.gallery.slice(0, 6) : Object.values(images.services || {}).slice(0, 3);
+const firstFaq = services[0]?.faq || [];
+
+// Slug-to-display-name mapping
+
+const ACRONYMS = new Set(["hvac", "ac", "bbq", "rv", "atv", "suv"]);
+function nicheDisplayName(input: string): string {
+  return input.split(/[\s-]+/).map(word => {
+    if (ACRONYMS.has(word.toLowerCase())) return word.toUpperCase();
+    return word.charAt(0).toUpperCase() + word.slice(1);
+  }).join(" ");
+}
+const categoryDisplay = nicheDisplayName(biz.category);
+
+
+const phoneRaw = biz.phone?.replace(/\D/g, "") || "";
+const phoneFmt = biz.phone || "";
+const yr = new Date().getFullYear() - (info.yearsInBusiness || 10);
+const yearsExp = new Date().getFullYear() - yr;
+---
+
+<BaseLayout
+  title={seo.title}
+  description={seo.description}
+  ogTitle={seo.ogTitle}
+  ogDescription={seo.ogDescription}
+>
+
+  <!-- ============ TOP INFO BAR ============ -->
+    </div>
+  </div>
+
+  <!-- ============ NAVIGATION ============ -->
+  <StickyMinimal slot="nav" />
+
+  <!-- ============ HERO SECTION ============ -->
+  <section class="mb-hero">
+    {images.hero && <img src={images.hero} alt={`${biz.name} hero`} class="mb-hero-bg" srcset={heroR?.srcset || ""} sizes="100vw" loading="eager" fetchpriority="high" />}
+    <div class="mb-hero-overlay"></div>
+    <div class="mb-container mb-hero-inner">
+      <div class="mb-hero-content">
+        <h1 class="mb-hero-title">{homepage.heroHeadline || `Trusted ${categoryDisplay} Experts in ${biz.city || "Your Area"}`}</h1>
+        <p class="mb-hero-text">{homepage.heroSubline || `${biz.name} provides expert ${categoryDisplay.toLowerCase()} services backed by ${yearsExp}+ years of experience. Quality craftsmanship, reliable service, and complete customer satisfaction on every project.`}</p>
+        {phoneFmt && <a href={`tel:${phoneRaw}`} class="mb-btn mb-btn-gold mb-btn-hero">
+          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+          Call Now: {phoneFmt}
+        </a>}
+      </div>
+      <div class="mb-hero-form-wrap">
+        <div class="mb-hero-form-card">
+          <h2 class="mb-hero-form-title">Get a FREE Estimate Today!</h2>
+          <form class="mb-hero-form" action="/api/contact" method="POST">
+            <input type="text" name="name" placeholder="Full Name *" required class="mb-input" />
+            <input type="email" name="email" placeholder="Email Address *" required class="mb-input" />
+            <input type="tel" name="phone" placeholder="Phone Number *" required class="mb-input" />
+            <select name="service" aria-label="Select a Service" class="mb-input mb-select">
+              <option value="">Select a Service</option>
+              {services.map((s) => (
+                <option value={s.slug}>{s.name}</option>
+              ))}
+            </select>
+            <input type="text" name="address" placeholder="Street Address" class="mb-input" />
+            <input type="text" name="zip" placeholder="Zip Code" class="mb-input" />
+            <label class="form-consent" style="display:flex;gap:0.5rem;align-items:flex-start;font-size:0.75rem;color:var(--color-text-light,#666);line-height:1.5;margin:0.75rem 0;"><input type="checkbox" name="consent" required style="margin-top:0.2rem;flex-shrink:0" /><span>By submitting, I consent to receive calls/texts from {biz.name} at the number provided. Msg & data rates may apply. Reply STOP to opt out. <a href="/privacy/" style="color:var(--color-primary);text-decoration:underline">Privacy Policy</a> & <a href="/terms/" style="color:var(--color-primary);text-decoration:underline">Terms</a>.</span></label>
+            <button type="submit" class="mb-btn mb-btn-navy mb-btn-full">Get My Free Estimate</button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ TRUST SECTION ============ -->
+  <section class="mb-section mb-trust">
+    <div class="mb-container">
+      <div class="mb-trust-grid">
+        <div class="mb-trust-text">
+          <h2 class="mb-section-title">{homepage.aboutTitle || `Quality ${categoryDisplay} Backed by Experience and Trust`}</h2>
+          <p class="mb-trust-body">{homepage.aboutText?.[0] || `For over ${yearsExp} years, ${biz.name} has been the trusted ${categoryDisplay.toLowerCase()} provider for homeowners and businesses in ${biz.city || "our community"}. We combine expert craftsmanship with premium materials to deliver solutions that stand the test of time.`}</p>
+          <a href="/about" class="mb-btn mb-btn-outline">Learn More About Us</a>
+        </div>
+        <div class="mb-trust-image">
+          {galleryImages[0] ? (
+            <img src={galleryImages[0]} alt={`${categoryDisplay} project by ${biz.name}`} class="mb-trust-img" loading="lazy" />
+          ) : images.hero ? (
+            <img src={images.hero} alt={`${categoryDisplay} project by ${biz.name}`} class="mb-trust-img" loading="lazy" />
+          ) : null}
+        </div>
+      </div>
+      <div class="mb-trust-badges">
+        <div class="mb-badge">
+          <span class="mb-badge-number">Since {yr}</span>
+          <span class="mb-badge-label">Established</span>
+        </div>
+        <div class="mb-badge">
+          <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="var(--mb-gold)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"/><circle cx="12" cy="10" r="3"/></svg>
+          <span class="mb-badge-label">Locally Owned</span>
+        </div>
+        <div class="mb-badge">
+          <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="var(--mb-gold)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+          <span class="mb-badge-label">Licensed & Insured</span>
+        </div>
+        <div class="mb-badge">
+          <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="var(--mb-gold)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+          <span class="mb-badge-label">W2 Employees</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ SERVICES SECTION ============ -->
+  <section class="mb-section mb-services-section" id="services">
+    <div class="mb-container">
+      <div class="mb-section-header">
+        <h2 class="mb-section-title">{`Our ${categoryDisplay} Services`}</h2>
+        <p class="mb-section-sub">{`Professional ${categoryDisplay.toLowerCase()} solutions tailored to your needs.`}</p>
+      </div>
+      <div class="mb-services-grid">
+        {displayServices.map((s) => {
+          const sImg = images.services?.[s.slug];
+          return (
+            <div class="mb-service-card">
+              {sImg && <div class="mb-service-card-img"><img src={sImg} alt={s.name} loading="lazy" /></div>}
+              <div class="mb-service-card-body">
+                <h3 class="mb-service-card-title">{s.name}</h3>
+                <p class="mb-service-card-text">{s.shortDescription || s.description?.slice(0, 140) + "..."}</p>
+                <a href={`/services/${s.slug}`} class="mb-service-link">Learn More <span>&rarr;</span></a>
+              </div>
+            </div>
+          );
+        })}
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ FAQ SECTION ============ -->
+  {firstFaq.length > 0 && (
+    <section class="mb-section mb-faq-section">
+      <div class="mb-container">
+        <div class="mb-section-header">
+          <h2 class="mb-section-title">Frequently Asked Questions</h2>
+          <p class="mb-section-sub">Get answers to the most common questions {`about our ${categoryDisplay.toLowerCase()} services.`}</p>
+        </div>
+        <div class="mb-faq-list">
+          {firstFaq.slice(0, 6).map((item) => (
+            <details class="mb-faq-item">
+              <summary class="mb-faq-question">
+                <span>{item.question}</span>
+                <span class="mb-faq-icon"></span>
+              </summary>
+              <div class="mb-faq-answer"><p>{item.answer}</p></div>
+            </details>
+          ))}
+        </div>
+      </div>
+    </section>
+  )}
+
+  <!-- ============ TESTIMONIALS SECTION ============ -->
+  {displayReviews.length > 0 && (
+    <section class="mb-section mb-reviews-section">
+      <div class="mb-container">
+        <div class="mb-section-header">
+          <h2 class="mb-section-title">{`Reviews From Our ${categoryDisplay} Customers`}</h2>
+          <p class="mb-section-sub">See what our satisfied customers have to say about their experience.</p>
+        </div>
+        <div class="mb-reviews-grid">
+          {displayReviews.slice(0, 3).map((r) => (
+            <div class="mb-review-card">
+              <div class="mb-review-stars">
+                {Array.from({ length: 5 }).map((_, i) => (
+                  <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill={i < (r.rating || 5) ? "var(--mb-gold)" : "#E5E7EB"} stroke="none"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+                ))}
+              </div>
+              <p class="mb-review-text">"{r.text}"</p>
+              <div class="mb-review-author">
+                <strong>{r.name}</strong>
+                {r.service && <span class="mb-review-service">{r.service}</span>}
+              </div>
+            </div>
+          ))}
+        </div>
+        {reviews.length > 3 && <div class="mb-center"><a href="/reviews" class="mb-btn mb-btn-outline">Read All Reviews</a></div>}
+      </div>
+    </section>
+  )}
+
+  <!-- ============ PORTFOLIO SECTION ============ -->
+  {galleryImages.length > 0 && (
+    <section class="mb-section mb-portfolio-section">
+      <div class="mb-container">
+        <div class="mb-section-header">
+          <h2 class="mb-section-title">Latest Projects</h2>
+          <p class="mb-section-sub">{`Browse our recent ${categoryDisplay.toLowerCase()} projects.`}</p>
+        </div>
+        <div class="mb-portfolio-grid">
+          {galleryImages.slice(0, 4).map((img, idx) => (
+            <div class="mb-portfolio-card">
+              {img && <img src={img} alt={`Project ${idx + 1}`} class="mb-portfolio-img" loading="lazy" />}
+              <div class="mb-portfolio-overlay">
+                <span class="mb-portfolio-label">{biz.city || "Local"} Project</span>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+  )}
+
+  <!-- ============ STATS SECTION ============ -->
+  <section class="mb-stats">
+    <div class="mb-container mb-stats-grid">
+      <div class="mb-stat">
+        <span class="mb-stat-number">800+</span>
+        <span class="mb-stat-label">Residential Projects</span>
+      </div>
+      <div class="mb-stat">
+        <span class="mb-stat-number">97%</span>
+        <span class="mb-stat-label">Customer Satisfaction</span>
+      </div>
+      <div class="mb-stat">
+        <span class="mb-stat-number">20+</span>
+        <span class="mb-stat-label">Team Members</span>
+      </div>
+      <div class="mb-stat">
+        <span class="mb-stat-number">{yearsExp}+</span>
+        <span class="mb-stat-label">Years Experience</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ CTA + FOOTER FORM ============ -->
+  <section class="mb-cta-form" id="contact">
+    <div class="mb-container">
+      <div class="mb-cta-form-inner">
+        <div class="mb-cta-form-text">
+          <h2 class="mb-cta-form-title">{homepage.ctaHeadline || `Get a Free ${categoryDisplay} Estimate`}</h2>
+          <p class="mb-cta-form-sub">{homepage.ctaSubline || `Fill out the form and one of our ${categoryDisplay.toLowerCase()} experts will get back to you within 24 hours.`}</p>
+          {phoneFmt && <p class="mb-cta-form-phone">Or call us now: <a href={`tel:${phoneRaw}`} class="mb-cta-phone-link">{phoneFmt}</a></p>}
+        </div>
+        <form class="mb-footer-form" action="/api/contact" method="POST">
+          <div class="mb-form-row">
+            <input type="text" name="name" placeholder="Full Name *" required class="mb-input mb-input-dark" />
+            <input type="tel" name="phone" placeholder="Phone Number *" required class="mb-input mb-input-dark" />
+          </div>
+          <div class="mb-form-row">
+            <input type="email" name="email" placeholder="Email Address *" required class="mb-input mb-input-dark" />
+            <select name="service" aria-label="Select a Service" class="mb-input mb-input-dark mb-select">
+              <option value="">Select a Service</option>
+              {services.map((s) => (
+                <option value={s.slug}>{s.name}</option>
+              ))}
+            </select>
+          </div>
+          <div class="mb-form-row">
+            <input type="text" name="address" placeholder="Street Address" class="mb-input mb-input-dark" />
+            <input type="text" name="zip" placeholder="Zip Code" class="mb-input mb-input-dark" />
+          </div>
+          <textarea name="message" placeholder="Tell us about your project..." rows="4" class="mb-input mb-input-dark mb-textarea"></textarea>
+          <label class="form-consent" style="display:flex;gap:0.5rem;align-items:flex-start;font-size:0.75rem;color:var(--color-text-light,#666);line-height:1.5;margin:0.75rem 0;"><input type="checkbox" name="consent" required style="margin-top:0.2rem;flex-shrink:0" /><span>By submitting, I consent to receive calls/texts from {biz.name} at the number provided. Msg & data rates may apply. Reply STOP to opt out. <a href="/privacy/" style="color:var(--color-primary);text-decoration:underline">Privacy Policy</a> & <a href="/terms/" style="color:var(--color-primary);text-decoration:underline">Terms</a>.</span></label>
+            <button type="submit" class="mb-btn mb-btn-gold mb-btn-full">Submit Request</button>
+        </form>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ FOOTER ============ -->
+  <MultiColumn slot="footer" />
+
+  <!-- ============ MOBILE NAV SCRIPT ============ -->
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      const hamburger = document.getElementById("mbHamburger");
+      const navLinks = document.getElementById("mbNavLinks");
+      if (hamburger && navLinks) {
+        hamburger.addEventListener("click", () => {
+          hamburger.classList.toggle("mb-active");
+          navLinks.classList.toggle("mb-open");
+        });
+      }
+    });
+  </script>
+
+</BaseLayout>
+
+<style>
+  /* ==========================================
+     MOUNTAIN BOLD — Variables
+     ========================================== */
+  :root {
+    --mb-navy: #1A3A52;
+    --mb-gold: #D4A300;
+    --mb-white: #FFFFFF;
+    --mb-light: #F5F7FA;
+    --mb-text: #1F2937;
+    --mb-text-light: #6B7280;
+    --mb-border: #E5E7EB;
+  }
+
+  /* ==========================================
+     MOUNTAIN BOLD — Base
+     ========================================== */
+  .mb-container {
+    max-width: 1280px;
+    margin: 0 auto;
+    padding: 0 1.5rem;
+  }
+
+  .mb-section {
+    padding: 5rem 0;
+  }
+
+  .mb-section-header {
+    text-align: center;
+    margin-bottom: 3rem;
+  }
+
+  .mb-section-title {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 2.25rem;
+    font-weight: 700;
+    color: var(--mb-navy);
+    margin: 0 0 0.75rem;
+    line-height: 1.2;
+  }
+
+  .mb-section-sub {
+    font-family: 'Inter', sans-serif;
+    font-size: 1.1rem;
+    color: var(--mb-text-light);
+    margin: 0;
+    max-width: 640px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  .mb-center {
+    text-align: center;
+    margin-top: 2rem;
+  }
+
+  /* ==========================================
+     MOUNTAIN BOLD — Buttons
+     ========================================== */
+  .mb-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-family: 'Space Grotesk', sans-serif;
+    font-weight: 700;
+    font-size: 1rem;
+    text-decoration: none;
+    border-radius: 6px;
+    border: none;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    padding: 0.75rem 1.75rem;
+    line-height: 1.4;
+  }
+
+  .mb-btn-gold {
+    background: var(--mb-gold);
+    color: var(--mb-navy);
+    padding: 1rem 2.5rem;
+    font-size: 1.1rem;
+  }
+
+  .mb-btn-gold:hover {
+    background: #e6b300;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(255, 198, 0, 0.4);
+  }
+
+  .mb-btn-navy {
+    background: var(--mb-navy);
+    color: var(--mb-white);
+  }
+
+  .mb-btn-navy:hover {
+    background: #14304a;
+  }
+
+  .mb-btn-outline {
+    background: transparent;
+    color: var(--mb-navy);
+    border: 2px solid var(--mb-navy);
+    padding: 0.7rem 1.75rem;
+  }
+
+  .mb-btn-outline:hover {
+    background: var(--mb-navy);
+    color: var(--mb-white);
+  }
+
+  .mb-btn-full {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .mb-btn-hero {
+    padding: 1.25rem 3rem;
+    font-size: 1.25rem;
+    border-radius: 8px;
+    box-shadow: 0 4px 16px rgba(255, 198, 0, 0.5);
+  }
+
+  .mb-btn-hero:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 24px rgba(255, 198, 0, 0.6);
+  }
+
+  /* ==========================================
+     MOUNTAIN BOLD — Forms
+     ========================================== */
+  .mb-input {
+    width: 100%;
+    padding: 0.85rem 1rem;
+    font-family: 'Inter', sans-serif;
+    font-size: 0.95rem;
+    border: 1.5px solid var(--mb-border);
+    border-radius: 6px;
+    background: var(--mb-white);
+    color: var(--mb-text);
+    transition: border-color 0.2s;
+    box-sizing: border-box;
+  }
+
+  .mb-input:focus {
+    outline: none;
+    border-color: var(--mb-gold);
+    box-shadow: 0 0 0 3px rgba(255, 198, 0, 0.15);
+  }
+
+  .mb-input::placeholder {
+    color: var(--mb-text-light);
+  }
+
+  .mb-select {
+    appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%236B7280' stroke-width='2'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 1rem center;
+    padding-right: 2.5rem;
+  }
+
+  .mb-input-dark {
+    background: rgba(255,255,255,0.1);
+    border-color: rgba(255,255,255,0.25);
+    color: var(--mb-white);
+  }
+
+  .mb-input-dark::placeholder {
+    color: rgba(255,255,255,0.6);
+  }
+
+  .mb-input-dark:focus {
+    border-color: var(--mb-gold);
+    background: rgba(255,255,255,0.15);
+  }
+
+  .mb-textarea {
+    resize: vertical;
+    min-height: 100px;
+  }
+
+  .mb-form-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+  }
+
+  /* ==========================================
+     MOUNTAIN BOLD — Top Bar
+     ========================================== */
+  .mb-topbar {
+    background: var(--mb-navy);
+    padding: 0.5rem 0;
+    font-size: 0.85rem;
+  }
+
+  .mb-topbar-inner {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .mb-topbar-left {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+    flex-wrap: wrap;
+  }
+
+  .mb-topbar-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    color: rgba(255,255,255,0.85);
+    text-decoration: none;
+    transition: color 0.2s;
+  }
+
+  .mb-topbar-link:hover {
+    color: var(--mb-gold);
+  }
+
+  .mb-topbar-right {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+  }
+
+  .mb-topbar-social {
+    color: rgba(255,255,255,0.7);
+    transition: color 0.2s;
+    display: flex;
+    align-items: center;
+  }
+
+  .mb-topbar-social:hover {
+    color: var(--mb-gold);
+  }
+
+  /* ==========================================
+     MOUNTAIN BOLD — Navigation
+     ========================================== */
+  .mb-nav {
+    background: var(--mb-white);
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.08);
+  }
+
+  .mb-nav-inner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding-top: 0;
+    padding-bottom: 0;
+    min-height: 72px;
+  }
+
+  .mb-nav-logo {
+    flex-shrink: 0;
+  }
+
+  .mb-logo-img {
+    height: 50px;
+    width: auto;
+    display: block;
+  }
+
+  .mb-logo-text {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--mb-navy);
+    text-decoration: none;
+  }
+
+  .mb-nav-links {
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+  }
+
+  .mb-nav-link {
+    font-family: 'Inter', sans-serif;
+    font-size: 0.95rem;
+    font-weight: 500;
+    color: var(--mb-text);
+    text-decoration: none;
+    padding: 0.5rem 0.85rem;
+    border-radius: 6px;
+    transition: color 0.2s, background 0.2s;
+    background: none;
+    border: none;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.3rem;
+  }
+
+  .mb-nav-link:hover {
+    color: var(--mb-navy);
+    background: var(--mb-light);
+  }
+
+  .mb-nav-actions {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    flex-shrink: 0;
+  }
+
+  .mb-nav-phone {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    font-family: 'Space Grotesk', sans-serif;
+    font-weight: 600;
+    font-size: 0.95rem;
+    color: var(--mb-navy);
+    text-decoration: none;
+    white-space: nowrap;
+  }
+
+  .mb-nav-phone:hover {
+    color: var(--mb-gold);
+  }
+
+  /* Hamburger */
+  .mb-hamburger {
+    display: none;
+    flex-direction: column;
+    gap: 5px;
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 8px;
+    z-index: 1001;
+  }
+
+  .mb-hamburger span {
+    display: block;
+    width: 24px;
+    height: 2.5px;
+    background: var(--mb-navy);
+    border-radius: 2px;
+    transition: all 0.3s;
+  }
+
+  .mb-hamburger.mb-active span:nth-child(1) {
+    transform: rotate(45deg) translate(5px, 5px);
+  }
+
+  .mb-hamburger.mb-active span:nth-child(2) {
+    opacity: 0;
+  }
+
+  .mb-hamburger.mb-active span:nth-child(3) {
+    transform: rotate(-45deg) translate(6px, -6px);
+  }
+
+  /* Dropdowns */
+  .mb-nav-dropdown {
+    position: relative;
+  }
+
+  .mb-dropdown-trigger {
+    font-family: 'Inter', sans-serif;
+  }
+
+  .mb-dropdown-menu {
+    display: none;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    background: var(--mb-white);
+    border-radius: 8px;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.12);
+    padding: 0.5rem 0;
+    min-width: 220px;
+    z-index: 100;
+  }
+
+  .mb-nav-dropdown:hover .mb-dropdown-menu {
+    display: block;
+  }
+
+  .mb-dropdown-item {
+    display: block;
+    padding: 0.55rem 1.25rem;
+    font-family: 'Inter', sans-serif;
+    font-size: 0.9rem;
+    color: var(--mb-text);
+    text-decoration: none;
+    transition: background 0.15s, color 0.15s;
+  }
+
+  .mb-dropdown-item:hover {
+    background: var(--mb-light);
+    color: var(--mb-navy);
+  }
+
+  .mb-dropdown-all {
+    border-top: 1px solid var(--mb-border);
+    margin-top: 0.25rem;
+    padding-top: 0.65rem;
+    font-weight: 600;
+    color: var(--mb-navy);
+  }
+
+  .mb-dropdown-areas {
+    min-width: 380px;
+  }
+
+  .mb-dropdown-cols {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+  }
+
+  /* ==========================================
+     MOUNTAIN BOLD — Hero
+     ========================================== */
+  .mb-hero {
+    position: relative;
+    min-height: 600px;
+    display: flex;
+    align-items: center;
+    overflow: hidden;
+    background: var(--mb-navy);
+  }
+
+  .mb-hero-bg {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    z-index: 1;
+  }
+
+  .mb-hero-overlay {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg, rgba(26,58,82,0.88) 0%, rgba(26,58,82,0.65) 100%);
+    z-index: 2;
+  }
+
+  .mb-hero-inner {
+    position: relative;
+    z-index: 3;
+    display: grid;
+    grid-template-columns: 1fr 420px;
+    gap: 3rem;
+    align-items: center;
+    padding-top: 4rem;
+    padding-bottom: 4rem;
+  }
+
+  .mb-hero-content {
+    color: var(--mb-white);
+  }
+
+  .mb-hero-title {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 3rem;
+    font-weight: 700;
+    line-height: 1.15;
+    margin: 0 0 1.25rem;
+    color: var(--mb-white);
+  }
+
+  .mb-hero-text {
+    font-family: 'Inter', sans-serif;
+    font-size: 1.15rem;
+    line-height: 1.7;
+    color: rgba(255,255,255,0.9);
+    margin: 0 0 2rem;
+    max-width: 540px;
+  }
+
+  .mb-hero-form-wrap {
+    display: flex;
+    justify-content: flex-end;
+  }
+
+  .mb-hero-form-card {
+    background: var(--mb-white);
+    border-radius: 12px;
+    padding: 2rem;
+    box-shadow: 0 12px 40px rgba(0,0,0,0.2);
+    width: 100%;
+    max-width: 420px;
+  }
+
+  .mb-hero-form-title {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 1.35rem;
+    font-weight: 700;
+    color: var(--mb-navy);
+    margin: 0 0 1.25rem;
+    text-align: center;
+  }
+
+  .mb-hero-form {
+    display: flex;
+    flex-direction: column;
+    gap: 0.85rem;
+  }
+
+  /* ==========================================
+     MOUNTAIN BOLD — Trust
+     ========================================== */
+  .mb-trust {
+    background: var(--mb-light);
+  }
+
+  .mb-trust-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 3rem;
+    align-items: center;
+    margin-bottom: 3rem;
+  }
+
+  .mb-trust-text .mb-section-title {
+    text-align: left;
+    margin-bottom: 1.25rem;
+  }
+
+  .mb-trust-body {
+    font-family: 'Inter', sans-serif;
+    font-size: 1.05rem;
+    line-height: 1.8;
+    color: var(--mb-text-light);
+    margin: 0 0 1.5rem;
+  }
+
+  .mb-trust-img {
+    width: 100%;
+    height: 380px;
+    object-fit: cover;
+    border-radius: 12px;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.1);
+  }
+
+  .mb-trust-badges {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1.5rem;
+  }
+
+  .mb-badge {
+    text-align: center;
+    padding: 1.5rem 1rem;
+    background: var(--mb-white);
+    border-radius: 10px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  .mb-badge-number {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--mb-navy);
+  }
+
+  .mb-badge-label {
+    font-family: 'Inter', sans-serif;
+    font-size: 0.9rem;
+    color: var(--mb-text-light);
+    font-weight: 500;
+  }
+
+  /* ==========================================
+     MOUNTAIN BOLD — Services
+     ========================================== */
+  .mb-services-section {
+    background: var(--mb-white);
+  }
+
+  .mb-services-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1.5rem;
+  }
+
+  .mb-service-card {
+    background: var(--mb-white);
+    border: 1px solid var(--mb-border);
+    border-radius: 10px;
+    overflow: hidden;
+    transition: transform 0.2s, box-shadow 0.2s;
+  }
+
+  .mb-service-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 8px 24px rgba(0,0,0,0.1);
+  }
+
+  .mb-service-card-img {
+    width: 100%;
+    height: 200px;
+    overflow: hidden;
+  }
+
+  .mb-service-card-img img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.3s;
+  }
+
+  .mb-service-card:hover .mb-service-card-img img {
+    transform: scale(1.05);
+  }
+
+  .mb-service-card-body {
+    padding: 1.5rem;
+  }
+
+  .mb-service-card-title {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 1.2rem;
+    font-weight: 700;
+    color: var(--mb-navy);
+    margin: 0 0 0.65rem;
+  }
+
+  .mb-service-card-text {
+    font-family: 'Inter', sans-serif;
+    font-size: 0.95rem;
+    color: var(--mb-text-light);
+    line-height: 1.6;
+    margin: 0 0 1rem;
+  }
+
+  .mb-service-link {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 0.95rem;
+    font-weight: 600;
+    color: var(--mb-navy);
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.3rem;
+    transition: color 0.2s, gap 0.2s;
+  }
+
+  .mb-service-link:hover {
+    color: var(--mb-gold);
+    gap: 0.6rem;
+  }
+
+  /* ==========================================
+     MOUNTAIN BOLD — FAQ
+     ========================================== */
+  .mb-faq-section {
+    background: var(--mb-light);
+  }
+
+  .mb-faq-list {
+    max-width: 800px;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+
+  .mb-faq-item {
+    background: var(--mb-white);
+    border: 1px solid var(--mb-border);
+    border-radius: 8px;
+    overflow: hidden;
+    transition: box-shadow 0.2s;
+  }
+
+  .mb-faq-item:hover {
+    box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+  }
+
+  .mb-faq-item[open] {
+    box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+  }
+
+  .mb-faq-question {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1.15rem 1.5rem;
+    cursor: pointer;
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 1.05rem;
+    font-weight: 600;
+    color: var(--mb-navy);
+    list-style: none;
+    user-select: none;
+  }
+
+  .mb-faq-question::-webkit-details-marker {
+    display: none;
+  }
+
+  .mb-faq-icon {
+    flex-shrink: 0;
+    width: 24px;
+    height: 24px;
+    position: relative;
+    margin-left: 1rem;
+  }
+
+  .mb-faq-icon::before,
+  .mb-faq-icon::after {
+    content: '';
+    position: absolute;
+    background: var(--mb-navy);
+    border-radius: 2px;
+    transition: transform 0.25s;
+  }
+
+  .mb-faq-icon::before {
+    width: 16px;
+    height: 2.5px;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+  }
+
+  .mb-faq-icon::after {
+    width: 2.5px;
+    height: 16px;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+  }
+
+  .mb-faq-item[open] .mb-faq-icon::after {
+    transform: translate(-50%, -50%) rotate(90deg);
+    opacity: 0;
+  }
+
+  .mb-faq-answer {
+    padding: 0 1.5rem 1.25rem;
+  }
+
+  .mb-faq-answer p {
+    font-family: 'Inter', sans-serif;
+    font-size: 0.95rem;
+    line-height: 1.7;
+    color: var(--mb-text-light);
+    margin: 0;
+  }
+
+  /* ==========================================
+     MOUNTAIN BOLD — Reviews
+     ========================================== */
+  .mb-reviews-section {
+    background: var(--mb-white);
+  }
+
+  .mb-reviews-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1.5rem;
+  }
+
+  .mb-review-card {
+    background: var(--mb-light);
+    border-radius: 10px;
+    padding: 2rem;
+    transition: transform 0.2s, box-shadow 0.2s;
+  }
+
+  .mb-review-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 6px 20px rgba(0,0,0,0.08);
+  }
+
+  .mb-review-stars {
+    display: flex;
+    gap: 2px;
+    margin-bottom: 1rem;
+  }
+
+  .mb-review-text {
+    font-family: 'Inter', sans-serif;
+    font-size: 0.95rem;
+    line-height: 1.7;
+    color: var(--mb-text);
+    margin: 0 0 1.25rem;
+    font-style: italic;
+  }
+
+  .mb-review-author {
+    display: flex;
+    flex-direction: column;
+    gap: 0.2rem;
+  }
+
+  .mb-review-author strong {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 1rem;
+    color: var(--mb-navy);
+  }
+
+  .mb-review-service {
+    font-family: 'Inter', sans-serif;
+    font-size: 0.85rem;
+    color: var(--mb-text-light);
+  }
+
+  /* ==========================================
+     MOUNTAIN BOLD — Portfolio
+     ========================================== */
+  .mb-portfolio-section {
+    background: var(--mb-light);
+  }
+
+  .mb-portfolio-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1.25rem;
+  }
+
+  .mb-portfolio-card {
+    position: relative;
+    border-radius: 10px;
+    overflow: hidden;
+    aspect-ratio: 4/3;
+  }
+
+  .mb-portfolio-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.3s;
+  }
+
+  .mb-portfolio-card:hover .mb-portfolio-img {
+    transform: scale(1.08);
+  }
+
+  .mb-portfolio-overlay {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(to top, rgba(26,58,82,0.8) 0%, transparent 50%);
+    display: flex;
+    align-items: flex-end;
+    padding: 1.25rem;
+    opacity: 0;
+    transition: opacity 0.3s;
+  }
+
+  .mb-portfolio-card:hover .mb-portfolio-overlay {
+    opacity: 1;
+  }
+
+  .mb-portfolio-label {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 0.95rem;
+    font-weight: 600;
+    color: var(--mb-white);
+  }
+
+  /* ==========================================
+     MOUNTAIN BOLD — Stats
+     ========================================== */
+  .mb-stats {
+    background: var(--mb-navy);
+    padding: 4rem 0;
+  }
+
+  .mb-stats-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 2rem;
+    text-align: center;
+  }
+
+  .mb-stat {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  .mb-stat-number {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 3.5rem;
+    font-weight: 800;
+    color: var(--mb-gold);
+    line-height: 1;
+  }
+
+  .mb-stat-label {
+    font-family: 'Inter', sans-serif;
+    font-size: 1rem;
+    color: rgba(255,255,255,0.8);
+    font-weight: 500;
+  }
+
+  /* ==========================================
+     MOUNTAIN BOLD — CTA Form
+     ========================================== */
+  .mb-cta-form {
+    background: var(--mb-navy);
+    padding: 5rem 0;
+  }
+
+  .mb-cta-form-inner {
+    max-width: 800px;
+    margin: 0 auto;
+  }
+
+  .mb-cta-form-text {
+    text-align: center;
+    margin-bottom: 2.5rem;
+  }
+
+  .mb-cta-form-title {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 2.25rem;
+    font-weight: 700;
+    color: var(--mb-white);
+    margin: 0 0 0.75rem;
+  }
+
+  .mb-cta-form-sub {
+    font-family: 'Inter', sans-serif;
+    font-size: 1.1rem;
+    color: rgba(255,255,255,0.75);
+    margin: 0 0 1rem;
+  }
+
+  .mb-cta-form-phone {
+    font-family: 'Inter', sans-serif;
+    font-size: 1rem;
+    color: rgba(255,255,255,0.7);
+    margin: 0;
+  }
+
+  .mb-cta-phone-link {
+    color: var(--mb-gold);
+    text-decoration: none;
+    font-weight: 600;
+  }
+
+  .mb-cta-phone-link:hover {
+    text-decoration: underline;
+  }
+
+  .mb-footer-form {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  .mb-footer-form .mb-select {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='rgba(255,255,255,0.6)' stroke-width='2'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E");
+  }
+
+  .mb-footer-form .mb-select option {
+    background: var(--mb-navy);
+    color: var(--mb-white);
+  }
+
+  /* ==========================================
+     MOUNTAIN BOLD — Footer
+     ========================================== */
+  .mb-footer {
+    background: #122a3c;
+  }
+
+  .mb-footer-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 2.5rem;
+    padding: 4rem 0 3rem;
+  }
+
+  .mb-footer-heading {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: var(--mb-white);
+    margin: 0 0 1.25rem;
+  }
+
+  .mb-footer-links {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+  }
+
+  .mb-footer-links a {
+    font-family: 'Inter', sans-serif;
+    font-size: 0.9rem;
+    color: rgba(255,255,255,0.7);
+    text-decoration: none;
+    transition: color 0.2s;
+  }
+
+  .mb-footer-links a:hover {
+    color: var(--mb-gold);
+  }
+
+  .mb-footer-contact {
+    display: flex;
+    flex-direction: column;
+    gap: 0.85rem;
+  }
+
+  .mb-footer-contact-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.6rem;
+    font-family: 'Inter', sans-serif;
+    font-size: 0.9rem;
+    color: rgba(255,255,255,0.7);
+    text-decoration: none;
+    line-height: 1.5;
+    transition: color 0.2s;
+  }
+
+  .mb-footer-contact-item:hover {
+    color: var(--mb-gold);
+  }
+
+  .mb-footer-contact-item svg {
+    flex-shrink: 0;
+    margin-top: 2px;
+  }
+
+  .mb-footer-bottom {
+    border-top: 1px solid rgba(255,255,255,0.1);
+    padding: 1.5rem 0;
+  }
+
+  .mb-footer-bottom-inner {
+    text-align: center;
+  }
+
+  .mb-footer-bottom p {
+    font-family: 'Inter', sans-serif;
+    font-size: 0.85rem;
+    color: rgba(255,255,255,0.5);
+    margin: 0;
+  }
+
+  /* ==========================================
+     MOUNTAIN BOLD — Responsive: 1024px
+     ========================================== */
+  @media (max-width: 1024px) {
+    .mb-hero-inner {
+      grid-template-columns: 1fr;
+      gap: 2rem;
+    }
+
+    .mb-hero-form-wrap {
+      justify-content: center;
+    }
+
+    .mb-hero-title {
+      font-size: 2.5rem;
+    }
+
+    .mb-services-grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+
+    .mb-portfolio-grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+
+    .mb-stats-grid {
+      grid-template-columns: repeat(2, 1fr);
+      gap: 2rem 1rem;
+    }
+
+    .mb-trust-grid {
+      grid-template-columns: 1fr;
+    }
+
+    .mb-trust-img {
+      height: 300px;
+    }
+
+    .mb-trust-badges {
+      grid-template-columns: repeat(2, 1fr);
+    }
+
+    .mb-footer-grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+
+  /* ==========================================
+     MOUNTAIN BOLD — Responsive: 768px
+     ========================================== */
+  @media (max-width: 768px) {
+    .mb-topbar-addr {
+      display: none;
+    }
+
+    .mb-hamburger {
+      display: flex;
+    }
+
+    .mb-nav-links {
+      display: none;
+      position: absolute;
+      top: 72px;
+      left: 0;
+      right: 0;
+      background: var(--mb-white);
+      flex-direction: column;
+      padding: 1rem;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.1);
+      border-top: 1px solid var(--mb-border);
+      z-index: 999;
+    }
+
+    .mb-nav-links.mb-open {
+      display: flex;
+    }
+
+    .mb-nav-link {
+      padding: 0.75rem 1rem;
+      width: 100%;
+    }
+
+    .mb-nav-dropdown {
+      width: 100%;
+    }
+
+    .mb-dropdown-menu {
+      position: static;
+      box-shadow: none;
+      border: none;
+      padding-left: 1rem;
+      display: none;
+    }
+
+    .mb-nav-dropdown:hover .mb-dropdown-menu,
+    .mb-nav-dropdown:focus-within .mb-dropdown-menu {
+      display: block;
+    }
+
+    .mb-dropdown-areas {
+      min-width: unset;
+    }
+
+    .mb-dropdown-cols {
+      grid-template-columns: 1fr;
+    }
+
+    .mb-nav-actions {
+      display: none;
+    }
+
+    .mb-hero-inner {
+      padding-top: 2.5rem;
+      padding-bottom: 2.5rem;
+    }
+
+    .mb-hero-title {
+      font-size: 2rem;
+    }
+
+    .mb-hero-text {
+      font-size: 1rem;
+    }
+
+    .mb-section {
+      padding: 3.5rem 0;
+    }
+
+    .mb-section-title {
+      font-size: 1.75rem;
+    }
+
+    .mb-reviews-grid {
+      grid-template-columns: 1fr;
+    }
+
+    .mb-form-row {
+      grid-template-columns: 1fr;
+    }
+
+    .mb-cta-form-title {
+      font-size: 1.75rem;
+    }
+
+    .mb-stat-number {
+      font-size: 2.75rem;
+    }
+  }
+
+  /* ==========================================
+     MOUNTAIN BOLD — Responsive: 375px
+     ========================================== */
+  @media (max-width: 480px) {
+    .mb-container {
+      padding: 0 1rem;
+    }
+
+    .mb-topbar-left {
+      gap: 0.75rem;
+      font-size: 0.78rem;
+    }
+
+    .mb-hero {
+      min-height: auto;
+      padding-top: 7rem;
+    }
+
+    .mb-hero-title {
+      font-size: 1.65rem;
+    }
+
+    .mb-hero-form-card {
+      padding: 1.5rem;
+    }
+
+    .mb-btn-hero {
+      padding: 1rem 2rem;
+      font-size: 1.1rem;
+    }
+
+    .mb-services-grid {
+      grid-template-columns: 1fr;
+    }
+
+    .mb-portfolio-grid {
+      grid-template-columns: 1fr;
+    }
+
+    .mb-stats-grid {
+      grid-template-columns: 1fr;
+      gap: 1.5rem;
+    }
+
+    .mb-trust-badges {
+      grid-template-columns: 1fr;
+    }
+
+    .mb-footer-grid {
+      grid-template-columns: 1fr;
+      gap: 2rem;
+    }
+
+    .mb-section {
+      padding: 2.5rem 0;
+    }
+
+    .mb-section-title {
+      font-size: 1.5rem;
+    }
+
+    .mb-stat-number {
+      font-size: 2.25rem;
+    }
+  }
+</style>
